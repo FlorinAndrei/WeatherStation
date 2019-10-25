@@ -121,16 +121,16 @@ void loop() {
 
   // format the output in CSV
   sprintf(linebuf_atm,
-    "a,%f,%f,%f",
-    temperature, humidity, pressure);
+    "a,%.2f,%.1f,%u",
+    temperature, humidity, int(pressure));
   sprintf(linebuf_acc,
-    "g,%f,%f,%f",
+    "g,%.2f,%.2f,%.2f",
     acc_x, acc_y, acc_z);
   sprintf(linebuf_gyro,
-    "r,%f,%f,%f",
+    "r,%.2f,%.2f,%.2f",
     gyro_x, gyro_y, gyro_z);
   sprintf(linebuf_magnet,
-    "m,%f,%f,%f",
+    "m,%.1f,%.1f,%.1f",
     magnet_x, magnet_y, magnet_z);
   sprintf(linebuf_color,
     "l,%u,%u,%u,%u",

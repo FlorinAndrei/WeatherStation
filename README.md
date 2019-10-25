@@ -4,6 +4,8 @@
 
 ## Goals
 
+![Arduino](/images/nano33.jpg)
+
 Use an [Arduino Nano 33 BLE Sense](https://store.arduino.cc/usa/nano-33-ble-sense) to read environmental parameters:
 - temperature
 - relative humidity
@@ -13,6 +15,8 @@ Use an [Arduino Nano 33 BLE Sense](https://store.arduino.cc/usa/nano-33-ble-sens
 - magnetic field in 3D (Earth's own field most of the time)
 - light: red, green, blue components, plus overall intensity
 - noise
+
+![RPi0](/images/rpi0.jpg)
 
 Use a [Raspberry Pi Zero W](https://www.raspberrypi.org/products/raspberry-pi-zero-w/) to read data from the Arduino and write it into a [Graphite](https://graphiteapp.org/) server as timeseries data. The RPi should cache data temporarily if Graphite is too busy or unavailable.
 

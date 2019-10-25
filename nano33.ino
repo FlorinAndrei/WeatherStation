@@ -12,12 +12,7 @@ float acc_x, acc_y, acc_z;
 float gyro_x, gyro_y, gyro_z;
 float magnet_x, magnet_y, magnet_z;
 
-char linebuf_atm[80];
-char linebuf_acc[80];
-char linebuf_gyro[80];
-char linebuf_magnet[80];
-char linebuf_color[80];
-char linebuf_noise[80];
+char linebuf_all[480];
 
 int r, g, b, w;
 
@@ -119,34 +114,16 @@ void loop() {
     samplesRead = 0;
   }
 
-  // format the output in CSV
-  sprintf(linebuf_atm,
-    "a,%.2f,%.1f,%u",
-    temperature, humidity, int(pressure));
-  sprintf(linebuf_acc,
-    "g,%.2f,%.2f,%.2f",
-    acc_x, acc_y, acc_z);
-  sprintf(linebuf_gyro,
-    "r,%.2f,%.2f,%.2f",
-    gyro_x, gyro_y, gyro_z);
-  sprintf(linebuf_magnet,
-    "m,%.1f,%.1f,%.1f",
-    magnet_x, magnet_y, magnet_z);
-  sprintf(linebuf_color,
-    "l,%u,%u,%u,%u",
-    r, g, b, w);
-  sprintf(linebuf_noise,
-    "n,%u",
+  sprintf(linebuf_all,
+    "a,%.2f,%.1f,%u,g,%.2f,%.2f,%.2f,r,%.2f,%.2f,%.2f,m,%.1f,%.1f,%.1f,l,%u,%u,%u,%u,n,%u",
+    temperature, humidity, int(pressure),
+    acc_x, acc_y, acc_z,
+    gyro_x, gyro_y, gyro_z,
+    magnet_x, magnet_y, magnet_z,
+    r, g, b, w,
     int(ftsum));
 
-  // print the measured values
-  Serial.println(linebuf_atm);
-  Serial.println(linebuf_acc);
-  Serial.println(linebuf_gyro);
-  Serial.println(linebuf_magnet);
-  Serial.println(linebuf_color);
-  Serial.println(linebuf_noise);
-  Serial.println("END");
+  Serial.println(linebuf_all);
 
   // blink the LED every cycle
   ledState = ledState ? LOW: HIGH;

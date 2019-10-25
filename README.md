@@ -1,2 +1,3 @@
 # WeatherStation
-Measure and store for visualization ambient data (air, light, sound...). Arduino, Raspberry Pi. Fourier transform. Multithreaded Python.
+
+**Status:** under construction. Arduino code is mostly complete. Python code work has just started.

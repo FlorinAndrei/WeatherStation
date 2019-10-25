@@ -1,4 +1,5 @@
 import threading
+import serial
 import time
 
 
@@ -6,12 +7,15 @@ import time
 # No point in using a queue then. So it needs locking.
 msgs = []
 
+ser_port = '/dev/ttyACM0'
+ser_speed = 9600
 
-def reader_main(lock):
+
+def reader_main(lock, ser):
   global msgs
 
   while True:
-    msg_read = input('input: ')
+    msg_read = ser.readline()
     lock.acquire()
     msgs.append(msg_read)
     lock.release()
@@ -38,7 +42,12 @@ if __name__ == "__main__":
   # Using a list, not a thread-safe queue. So use a lock then.
   lock = threading.Lock()
 
-  reader = threading.Thread(target = reader_main, args = (lock,), daemon = True)
+  ser = serial.Serial()
+  ser.baudrate = ser_speed
+  ser.port = ser_port
+  ser.open()
+
+  reader = threading.Thread(target = reader_main, args = (lock, ser), daemon = True)
   writer = threading.Thread(target = writer_main, args = (lock,), daemon = True)
 
   reader.start()

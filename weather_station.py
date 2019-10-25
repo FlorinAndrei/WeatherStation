@@ -13,12 +13,16 @@ ser_speed = 9600
 
 def reader_main(lock, ser):
   global msgs
+  read_buff = []
 
   while True:
-    msg_read = ser.readline()
-    lock.acquire()
-    msgs.append(msg_read)
-    lock.release()
+    msg_line = ser.readline().decode('UTF-8').rstrip()
+    read_buff.append(msg_line)
+    if msg_line == 'END':
+      lock.acquire()
+      msgs += read_buff
+      lock.release()
+      read_buff = []
 
 
 def writer_main(lock):

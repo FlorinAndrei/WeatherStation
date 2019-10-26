@@ -1,5 +1,6 @@
 import threading
 import serial
+import graphite
 import time
 
 
@@ -8,7 +9,7 @@ import time
 msgs = []
 
 ser_port = '/dev/ttyACM0'
-ser_speed = 9600
+ser_speed = 115200
 
 
 def reader_main(lock, ser):

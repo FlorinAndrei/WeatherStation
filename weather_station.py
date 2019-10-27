@@ -4,14 +4,6 @@ import graphyte
 import time
 
 
-# This is not a queue. It is truncated all at once by the consumer.
-# No point in using a queue then. So it needs locking.
-msgs = []
-
-ser_port = '/dev/ttyACM0'
-ser_speed = 115200
-
-
 def reader_main(lock, ser):
   global msgs
 
@@ -40,6 +32,13 @@ def writer_main(lock):
 
 
 if __name__ == "__main__":
+  # This is not a queue. It is truncated all at once by the consumer.
+  # No point in using a queue then. So it needs locking.
+  msgs = []
+
+  ser_port = '/dev/ttyACM0'
+  ser_speed = 115200
+
   # Using a list, not a thread-safe queue. So use a lock then.
   lock = threading.Lock()
 

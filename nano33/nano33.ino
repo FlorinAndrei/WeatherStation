@@ -12,7 +12,7 @@ float acc_x, acc_y, acc_z;
 float gyro_x, gyro_y, gyro_z;
 float magnet_x, magnet_y, magnet_z;
 
-char linebuf_all[480];
+char linebuf_all[200];
 
 int r, g, b, w;
 

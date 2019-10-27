@@ -32,7 +32,7 @@ double ftsum = 0.0;
 int ledState = LOW;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   delay(100);
 
   HTS.begin();

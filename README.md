@@ -34,3 +34,7 @@ Noise loudness requires some math. The Arduino sensor could capture a snapshot o
 One way to do this is to do FFT from the waveform and generate the spectral components. Then sum all components on a logarithmic scale. This ought to be close enough to perceived loudness.
 
 Surprisingly, the Arduino is fast enough for real time FFT.
+
+## Example of Grafana dashboard while testing (incomplete data)
+
+![Grafana](/images/grafana-test.png)

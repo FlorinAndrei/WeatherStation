@@ -1,2 +1,2 @@
 pyserial
-graphite
+graphyte

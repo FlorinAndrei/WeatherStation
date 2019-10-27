@@ -10,6 +10,8 @@ def reader_main(lock, ser):
 
   while True:
     msg_line = ser.readline().decode('UTF-8').rstrip()
+    now = str(int(time.time()))
+    msg_line = now + ',' + msg_line
     lock.acquire()
     msgs.append(msg_line)
     lock.release()

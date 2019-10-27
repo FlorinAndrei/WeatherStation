@@ -1,5 +1,6 @@
 import threading
 import serial
+import argparse
 import graphyte
 import time
 
@@ -32,12 +33,17 @@ def writer_main(lock):
 
 
 if __name__ == "__main__":
+  parser = argparse.ArgumentParser(description="data relay and message queue")
+  parser.add_argument('--serial', type=str, default='/dev/ttyACM0', help='serial port connected to Arduino')
+  parser.add_argument('--speed', type=int, default=115200, help='serial port speed')
+  args = parser.parse_args()
+
   # This is not a queue. It is truncated all at once by the consumer.
   # No point in using a queue then. So it needs locking.
   msgs = []
 
-  ser_port = '/dev/ttyACM0'
-  ser_speed = 115200
+  ser_port = args.serial
+  ser_speed = args.speed
 
   # Using a list, not a thread-safe queue. So use a lock then.
   lock = threading.Lock()

@@ -18,6 +18,7 @@ def reader_main(lock, ser):
 def writer_main(lock):
   global msgs
   msgs_write = []
+  print("Ready:")
 
   while True:
     if len(msgs) != 0:

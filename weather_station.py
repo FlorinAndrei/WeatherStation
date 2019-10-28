@@ -92,7 +92,9 @@ def reader_main(lock, args):
 def writer_main(lock, args):
   global msgs
   global prctl_exists
-  if prctl_exists:                                                                                                                                                prctl.set_name(threading.currentThread().name)
+
+  if prctl_exists:
+    prctl.set_name(threading.currentThread().name)
 
   msgs_out = []
 

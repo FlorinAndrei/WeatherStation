@@ -7,6 +7,13 @@ import socket
 import struct
 import csv
 import time
+# recommend to install python-prctl, so the threads are properly named
+# but it's not mandatory
+try:
+  import prctl
+  prctl_exists = True
+except:
+  prctl_exists = False
 from pprint import pprint
 
 
@@ -53,6 +60,11 @@ def reader_main(lock, args):
   # keep this function as simple as possible
   # to avoid losing data from the Arduino
   global msgs
+  global prctl_exists
+
+  if prctl_exists:
+    prctl.set_name(threading.currentThread().name)
+
   now_old = ''
   msg_in = []
 
@@ -79,6 +91,9 @@ def reader_main(lock, args):
 
 def writer_main(lock, args):
   global msgs
+  global prctl_exists
+  if prctl_exists:                                                                                                                                                prctl.set_name(threading.currentThread().name)
+
   msgs_out = []
 
   while True:
@@ -132,8 +147,8 @@ if __name__ == "__main__":
   # Using a list, not a thread-safe queue. So use a lock then.
   lock = threading.Lock()
 
-  reader = threading.Thread(target = reader_main, args = (lock, args), daemon = True)
-  writer = threading.Thread(target = writer_main, args = (lock, args), daemon = True)
+  reader = threading.Thread(target = reader_main, name = 'reader', args = (lock, args), daemon = True)
+  writer = threading.Thread(target = writer_main, name = 'writer', args = (lock, args), daemon = True)
 
   reader.start()
   writer.start()

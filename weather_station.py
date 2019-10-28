@@ -49,12 +49,17 @@ def text_to_pickle(messages, gpath):
   return output_batch
 
 
-def reader_main(lock, ser):
+def reader_main(lock, args):
   # keep this function as simple as possible
   # to avoid losing data from the Arduino
   global msgs
   now_old = ''
   msg_in = []
+
+  ser = serial.Serial()
+  ser.baudrate = args.speed
+  ser.port = args.port
+  ser.open()
 
   while True:
     msg_line = ser.readline().decode('UTF-8').rstrip()
@@ -124,18 +129,10 @@ if __name__ == "__main__":
   # No point in using a queue then. So it needs locking.
   msgs = []
 
-  ser_port = args.port
-  ser_speed = args.speed
-
   # Using a list, not a thread-safe queue. So use a lock then.
   lock = threading.Lock()
 
-  ser = serial.Serial()
-  ser.baudrate = ser_speed
-  ser.port = ser_port
-  ser.open()
-
-  reader = threading.Thread(target = reader_main, args = (lock, ser), daemon = True)
+  reader = threading.Thread(target = reader_main, args = (lock, args), daemon = True)
   writer = threading.Thread(target = writer_main, args = (lock, args), daemon = True)
 
   reader.start()

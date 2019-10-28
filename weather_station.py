@@ -72,7 +72,7 @@ def reader_main(lock, ser):
     msg_in.append(msg_line)
 
 
-def writer_main(lock, gserver, gport, gwait, gpath):
+def writer_main(lock, args):
   global msgs
   msgs_out = []
 
@@ -86,7 +86,7 @@ def writer_main(lock, gserver, gport, gwait, gpath):
 
       # Graphite pickle protocol
       # rewrite messages as list of tuples
-      graph_slice = text_to_pickle(msgs_out, gpath)
+      graph_slice = text_to_pickle(msgs_out, args.gpath)
       pprint(graph_slice)
       # prepare the Graphite data
       payload = pickle.dumps(graph_slice, protocol=2)
@@ -98,7 +98,7 @@ def writer_main(lock, gserver, gport, gwait, gpath):
         # Breaking connection is fine if the pause is long enough.
         # If Graphite is not available, cache data internally (TBD).
         sock = socket.socket()
-        sock.connect((gserver, gport))
+        sock.connect((args.gserver, args.gport))
         sock.sendall(header)
         sock.sendall(payload)
         sock.close()
@@ -107,7 +107,7 @@ def writer_main(lock, gserver, gport, gwait, gpath):
         # TODO: implement internal buffer limited by usable RAM
         continue
 
-    time.sleep(gwait)
+    time.sleep(args.gwait)
 
 
 if __name__ == "__main__":
@@ -136,7 +136,7 @@ if __name__ == "__main__":
   ser.open()
 
   reader = threading.Thread(target = reader_main, args = (lock, ser), daemon = True)
-  writer = threading.Thread(target = writer_main, args = (lock, args.gserver, args.gport, args.gwait, args.gpath), daemon = True)
+  writer = threading.Thread(target = writer_main, args = (lock, args), daemon = True)
 
   reader.start()
   writer.start()

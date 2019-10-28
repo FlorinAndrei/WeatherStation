@@ -115,8 +115,8 @@ void loop() {
   }
 
   sprintf(linebuf_all,
-    "a,%.2f,%.1f,%u,g,%.2f,%.2f,%.2f,r,%.2f,%.2f,%.2f,m,%.1f,%.1f,%.1f,l,%u,%u,%u,%u,n,%u",
-    temperature, humidity, int(pressure),
+    "a,%.2f,%.1f,%.2f,g,%.2f,%.2f,%.2f,r,%.2f,%.2f,%.2f,m,%.1f,%.1f,%.1f,l,%u,%u,%u,%u,n,%u",
+    temperature, humidity, pressure,
     acc_x, acc_y, acc_z,
     gyro_x, gyro_y, gyro_z,
     magnet_x, magnet_y, magnet_z,

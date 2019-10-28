@@ -15,7 +15,6 @@ def text_to_pickle(messages, gpath):
   # return a list of tuples with sensor data ready for pickle
   # guarantee unique timestamps for each metric
 
-  # TODO: Timestamps still not unique, are repeated across writer thread loops
   output_batch = []
 
   ts_old = ''
@@ -54,14 +53,23 @@ def reader_main(lock, ser):
   # keep this function as simple as possible
   # to avoid losing data from the Arduino
   global msgs
+  now_old = ''
+  msg_in = []
 
   while True:
     msg_line = ser.readline().decode('UTF-8').rstrip()
     now = str(int(time.time()))
     msg_line = now + ',' + msg_line
-    lock.acquire()
-    msgs.append(msg_line)
-    lock.release()
+    if now != now_old:
+      # a new second has started; flush the local buffer
+      # we only do this on the cusp between seconds
+      # so the writer thread only receives complete seconds
+      lock.acquire()
+      msgs += msg_in
+      lock.release()
+      msg_in = []
+      now_old = now
+    msg_in.append(msg_line)
 
 
 def writer_main(lock, gserver, gport, gwait, gpath):

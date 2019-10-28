@@ -1,6 +1,6 @@
 # WeatherStation
 
-**Status:** under construction. Arduino code is mostly complete. Python code mostly working but incomplete.
+**Status:** Under construction. Arduino C++ code is near completion. Python code is working for the most part, but incomplete.
 
 ## Goals
 

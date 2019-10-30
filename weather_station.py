@@ -144,8 +144,7 @@ def writer_main(lock, args):
       # Graphite pickle protocol
       # rewrite messages as list of tuples
       graph_slice += strings_to_tuples(msgs_out, args.gpath)
-      print()
-      pprint(graph_slice)
+      print(graph_slice[0], graph_slice[-1], len(graph_slice))
       # prepare the Graphite data; Graphite docs recommend protocol=2
       # there is no way to control the size of the payload
       # Graphite may not accept arbitrarily large messages

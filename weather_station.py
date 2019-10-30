@@ -33,7 +33,7 @@ def average_rows(batch_for_avg):
   return(avg_row)
 
 
-def text_to_pickle(messages, gpath):
+def strings_to_tuples(messages, gpath):
   # take in a list of strings; one string = one line of full sensor data with timestamp
   # return a list of tuples with sensor data ready for pickle
   # guarantee unique timestamps for each metric
@@ -142,7 +142,7 @@ def writer_main(lock, args):
 
       # Graphite pickle protocol
       # rewrite messages as list of tuples
-      graph_slice = text_to_pickle(msgs_out, args.gpath)
+      graph_slice = strings_to_tuples(msgs_out, args.gpath)
       print()
       pprint(graph_slice)
       # prepare the Graphite data

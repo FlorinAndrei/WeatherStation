@@ -145,7 +145,7 @@ def writer_main(lock, args):
       graph_slice = strings_to_tuples(msgs_out, args.gpath)
       print()
       pprint(graph_slice)
-      # prepare the Graphite data
+      # prepare the Graphite data; Graphite docs recommend protocol=2
       payload = pickle.dumps(graph_slice, protocol=2)
       header = struct.pack("!L", len(payload))
 

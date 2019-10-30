@@ -130,6 +130,7 @@ def writer_main(lock, args):
     prctl.set_name(threading.currentThread().name)
 
   msgs_out = []
+  graph_slice = []
 
   while True:
     time.sleep(args.gwait)
@@ -142,10 +143,13 @@ def writer_main(lock, args):
 
       # Graphite pickle protocol
       # rewrite messages as list of tuples
-      graph_slice = strings_to_tuples(msgs_out, args.gpath)
+      graph_slice += strings_to_tuples(msgs_out, args.gpath)
       print()
       pprint(graph_slice)
       # prepare the Graphite data; Graphite docs recommend protocol=2
+      # there is no way to control the size of the payload
+      # Graphite may not accept arbitrarily large messages
+      # TODO: implement message size control
       payload = pickle.dumps(graph_slice, protocol=2)
       header = struct.pack("!L", len(payload))
 
@@ -159,8 +163,10 @@ def writer_main(lock, args):
         sock.sendall(header)
         sock.sendall(payload)
         sock.close()
+        graph_slice = []
       except:
-        # this will lose data if Graphite is not available
+        # there is no way to control the size of graph_slice
+        # if the server is unavailable, graph_slice will run out of memory
         # TODO: implement internal buffer limited by usable RAM
         continue
 

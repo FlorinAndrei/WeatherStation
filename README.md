@@ -35,6 +35,6 @@ One way to do this is to do FFT from the waveform and generate the spectral comp
 
 Surprisingly, the Arduino is fast enough for real time FFT.
 
-## Example of Grafana dashboard while testing (incomplete data)
+## Example of Grafana dashboard with sensor data
 
 ![Grafana](/images/grafana-test.png)

@@ -17,6 +17,22 @@ except:
 from pprint import pprint
 
 
+def average_rows(batch_for_avg):
+  avg_row = [0.0] * 24
+  first_row = batch_for_avg[0]
+
+  # just copy timestamp and labels
+  for i in [0, 1, 5, 9, 13, 17, 22]:
+    avg_row[i] = first_row[i]
+
+  for j in [2, 3, 4, 6, 7, 8, 10, 11, 12, 14, 15, 16, 18, 19, 20, 21, 23]:
+    for i in range(len(batch_for_avg)):
+      avg_row[j] += float(batch_for_avg[i][j])
+    avg_row[j] /= len(batch_for_avg)
+
+  return(avg_row)
+
+
 def text_to_pickle(messages, gpath):
   # take in a list of strings; one string = one line of full sensor data with timestamp
   # return a list of tuples with sensor data ready for pickle
@@ -25,30 +41,48 @@ def text_to_pickle(messages, gpath):
   output_batch = []
 
   ts_old = ''
+  batch_for_avg = []
+
   for row in csv.reader(messages):
     ts = row[0]
+    # are we still within the same second?
     if ts == ts_old:
-      # skip duplicate timestamps for now
-      # TODO: average them instead
+      # we are within the same second-long sequence
+      # just keep absorbing rows
+      batch_for_avg.append(row)
       continue
+    else:
+      # we've reached the cusp between seconds
+      if batch_for_avg:
+        # we've collected at least one row for the previous second
+        # do the average and continue processing
+        avg_row = average_rows(batch_for_avg)
+        batch_for_avg = [row]
+      else:
+        # no previous data for this second
+        # perhaps the thread just got started
+        # add row to the pile and keep collecting rows
+        batch_for_avg = [row]
+        continue
+
     ts_old = ts
-    air_t = (gpath + '.air.temperature', (ts, row[2]))
-    air_h = (gpath + '.air.humidity', (ts, row[3]))
-    air_p = (gpath + '.air.pressure', (ts, row[4]))
-    acc_x = (gpath + '.acceleration.x', (ts, row[6]))
-    acc_y = (gpath + '.acceleration.y', (ts, row[7]))
-    acc_z = (gpath + '.acceleration.z', (ts, row[8]))
-    gyro_x = (gpath + '.gyroscope.x', (ts, row[10]))
-    gyro_y = (gpath + '.gyroscope.y', (ts, row[11]))
-    gyro_z = (gpath + '.gyroscope.z', (ts, row[12]))
-    magn_x = (gpath + '.magnetic.x', (ts, row[14]))
-    magn_y = (gpath + '.magnetic.y', (ts, row[15]))
-    magn_z = (gpath + '.magnetic.z', (ts, row[16]))
-    light_r = (gpath + '.light.red', (ts, row[18]))
-    light_g = (gpath + '.light.green', (ts, row[19]))
-    light_b = (gpath + '.light.blue', (ts, row[20]))
-    light_w = (gpath + '.light.white', (ts, row[21]))
-    noise = (gpath + '.noise', (ts, row[23]))
+    air_t = (gpath + '.air.temperature', (ts, avg_row[2]))
+    air_h = (gpath + '.air.humidity', (ts, avg_row[3]))
+    air_p = (gpath + '.air.pressure', (ts, avg_row[4]))
+    acc_x = (gpath + '.acceleration.x', (ts, avg_row[6]))
+    acc_y = (gpath + '.acceleration.y', (ts, avg_row[7]))
+    acc_z = (gpath + '.acceleration.z', (ts, avg_row[8]))
+    gyro_x = (gpath + '.gyroscope.x', (ts, avg_row[10]))
+    gyro_y = (gpath + '.gyroscope.y', (ts, avg_row[11]))
+    gyro_z = (gpath + '.gyroscope.z', (ts, avg_row[12]))
+    magn_x = (gpath + '.magnetic.x', (ts, avg_row[14]))
+    magn_y = (gpath + '.magnetic.y', (ts, avg_row[15]))
+    magn_z = (gpath + '.magnetic.z', (ts, avg_row[16]))
+    light_r = (gpath + '.light.red', (ts, avg_row[18]))
+    light_g = (gpath + '.light.green', (ts, avg_row[19]))
+    light_b = (gpath + '.light.blue', (ts, avg_row[20]))
+    light_w = (gpath + '.light.white', (ts, avg_row[21]))
+    noise = (gpath + '.noise', (ts, avg_row[23]))
     datapoint = [air_t, air_h, air_p, acc_x, acc_y, acc_z, gyro_x, gyro_y, gyro_z,
                  magn_x, magn_y, magn_z, light_r, light_g, light_b, light_w, noise]
     output_batch += datapoint
@@ -57,8 +91,7 @@ def text_to_pickle(messages, gpath):
 
 
 def reader_main(lock, args):
-  # keep this function as simple as possible
-  # to avoid losing data from the Arduino
+  # keep this function simple
   global msgs
   global prctl_exists
 
@@ -99,6 +132,7 @@ def writer_main(lock, args):
   msgs_out = []
 
   while True:
+    time.sleep(args.gwait)
     if len(msgs) != 0:
       #copy and empty out the inter-thread buffer
       lock.acquire()
@@ -109,6 +143,7 @@ def writer_main(lock, args):
       # Graphite pickle protocol
       # rewrite messages as list of tuples
       graph_slice = text_to_pickle(msgs_out, args.gpath)
+      print()
       pprint(graph_slice)
       # prepare the Graphite data
       payload = pickle.dumps(graph_slice, protocol=2)
@@ -128,8 +163,6 @@ def writer_main(lock, args):
         # this will lose data if Graphite is not available
         # TODO: implement internal buffer limited by usable RAM
         continue
-
-    time.sleep(args.gwait)
 
 
 if __name__ == "__main__":

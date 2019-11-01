@@ -2,6 +2,8 @@
 
 **Status:** Under construction. Arduino C++ code is near completion. Python code is working for the most part, but incomplete.
 
+Something freezes the Arduino code after a while - anywhere between 1 hour and 2 days. Could be a memory leak, a buggy library, etc. Need to troubleshoot. A watchdog for this Arduino would be really nice (hardware autoreset if inactive for longer than X seconds), but this CPU is new and Arduino libraries for it are scarce. Alternatively, I need to go through the code with the fine comb. TBD
+
 ## Goals
 
 ![Arduino](/images/nano33.jpg)

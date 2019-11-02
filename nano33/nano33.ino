@@ -27,6 +27,9 @@ double vImag[SAMPLES];
 // number of samples read
 volatile int samplesRead;
 
+short apds_loop;
+#define APDS_MAX 100
+
 double ftsum = 0.0;
 
 int ledState = LOW;
@@ -64,12 +67,24 @@ void setup() {
 
 void loop() {
 
+  apds_loop = 0;
   while (! APDS.colorAvailable()) {
     // always wait a bit after APDS.colorAvailable()
     delay(5);
+    // don't get stuck
+    if (++apds_loop > APDS_MAX) {
+      break;
+    }
   }
-  APDS.readColor(r, g, b, w);
-  delay(10);
+  if (apds_loop <= APDS_MAX) {
+    APDS.readColor(r, g, b, w);
+    delay(10);
+  } else {
+    r = 0;
+    g = 0;
+    b = 0;
+    w = 0;
+  }
 
   temperature = HTS.readTemperature();
   delay(10);

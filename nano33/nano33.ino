@@ -28,9 +28,11 @@ double vImag[SAMPLES];
 volatile int samplesRead;
 
 short apds_loop;
-#define APDS_MAX 100
+#define APDS_MAX 50
 
 double ftsum = 0.0;
+
+short srelax = 20;
 
 int ledState = LOW;
 
@@ -70,7 +72,7 @@ void loop() {
   apds_loop = 0;
   while (! APDS.colorAvailable()) {
     // always wait a bit after APDS.colorAvailable()
-    delay(5);
+    delay(srelax);
     // don't get stuck
     if (++apds_loop > APDS_MAX) {
       break;
@@ -78,7 +80,7 @@ void loop() {
   }
   if (apds_loop <= APDS_MAX) {
     APDS.readColor(r, g, b, w);
-    delay(10);
+    delay(srelax);
   } else {
     r = 0;
     g = 0;
@@ -87,22 +89,22 @@ void loop() {
   }
 
   temperature = HTS.readTemperature();
-  delay(10);
+  delay(srelax);
   humidity = HTS.readHumidity();
-  delay(10);
+  delay(srelax);
   pressure = BARO.readPressure(MILLIBAR);
-  delay(10);
+  delay(srelax);
 
   IMU.readAcceleration(acc_x, acc_y, acc_z);
-  delay(10);
+  delay(srelax);
   IMU.readGyroscope(gyro_x, gyro_y, gyro_z);
-  delay(10);
+  delay(srelax);
   IMU.readMagneticField(magnet_x, magnet_y, magnet_z);
-  delay(10);
+  delay(srelax);
 
   // wait for sound samples to be read
   if (samplesRead) {
-    delay(10);
+    delay(srelax);
     for (int i = 0; i < SAMPLES; i++) {
       // load the waveform into the FFT real vector
       vReal[i] = double(wform[i]);
@@ -144,7 +146,7 @@ void loop() {
   ledState = ledState ? LOW: HIGH;
   digitalWrite(LED_BUILTIN,  ledState);
   
-  delay(10);
+  delay(srelax);
 }
 
 void onPDMdata() {

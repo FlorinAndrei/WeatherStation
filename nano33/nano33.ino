@@ -99,7 +99,7 @@ short apds_loop;
 double ftsum = 0.0;
 
 // short pause between sensor reads
-short srelax = 20;
+short srelax = 40;
 
 int ledState = LOW;
 

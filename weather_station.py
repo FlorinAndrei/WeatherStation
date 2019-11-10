@@ -101,13 +101,19 @@ def reader_main(lock, args):
   now_old = ''
   msg_in = []
 
-  ser = serial.Serial()
-  ser.baudrate = args.speed
-  ser.port = args.port
-  ser.open()
+  ser = serial.Serial(args.port, args.speed)
 
   while True:
-    msg_line = ser.readline().decode('UTF-8').rstrip()
+    try:
+      msg_line = ser.readline().decode('UTF-8').rstrip()
+    except:
+      # Arduino was probably reset, try to connect again
+      ser.close()
+      time.sleep(2)
+      print('reopen serial line', str(int(time.time())))
+      ser = serial.Serial(args.port, args.speed)
+      time.sleep(1)
+      continue
     now = str(int(time.time()))
     msg_line = now + ',' + msg_line
     if now != now_old:

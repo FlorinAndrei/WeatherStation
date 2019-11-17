@@ -103,43 +103,62 @@ short srelax = 40;
 
 int ledState = LOW;
 
+// watchdog timeout in seconds
+// 1 second is shorter than sketch upload time
+// so uploads will fail when this sketch is loaded
+// tap the Reset button twice quickly
+// and the LED will start pulsing slowly
+// then do the sketch upload
+int wdt = 1;
+
 void setup() {
   Serial.begin(115200);
-  delay(100);
+  delay(srelax);
+
+  // configure watchdog
+  NRF_WDT->CONFIG         = 0x01;                  // Configure WDT to run when CPU is asleep
+  NRF_WDT->CRV            = int(wdt * 32768 + 1);  // CRV = timeout * 32768 + 1
+  NRF_WDT->RREN           = 0x01;                  // Enable the RR[0] reload register
+  NRF_WDT->TASKS_START    = 1;                     // Start WDT
+  delay(srelax);
 
   // temperature and humidity
   HTS.begin();
-  delay(100);
+  delay(srelax);
 
   // pressure
   BARO.begin();
-  delay(100);
+  delay(srelax);
   // The baro sensor reads wrong first time after init
   // so let's do a throw-away read here.
   pressure = BARO.readPressure(MILLIBAR);
-  delay(100);
+  delay(srelax);
 
   // acceleration, gyroscope, magnetic field
   IMU.begin();
-  delay(100);
+  delay(srelax);
 
   // light
   APDS.begin();
-  delay(100);
+  delay(srelax);
 
   // sound
   PDM.onReceive(onPDMdata);
-  delay(100);
+  delay(srelax);
   PDM.begin(1, SAMPLING_FREQUENCY);
-  delay(100);
+  delay(srelax);
 
   pinMode(LED_BUILTIN, OUTPUT);
 
   // Let's allow things to settle down.
-  delay(100);
+  delay(srelax);
 }
 
 void loop() {
+  // Reload the WDTs RR[0] reload register
+  // this will reset the watchdog every loop
+  // as long as all goes well
+  NRF_WDT->RR[0] = WDT_RR_RR_Reload;
 
   apds_loop = 0;
   // always check if sensor is available before reading from it

@@ -42,7 +42,7 @@ Surprisingly, the Nano 33 is fast enough to do FFT on the noise signal in real t
 
 ![RPi0](/images/rpi0.jpg)
 
-The [Raspberry Pi Zero W](https://www.raspberrypi.org/products/raspberry-pi-zero-w/) is used to read data from the Arduino, parse it, cache it when necessary, and write it into a [Graphite](https://graphiteapp.org/) server as timeseries data. It runs the Python parser / cache / logger.
+The [Raspberry Pi Zero W](https://www.raspberrypi.org/products/raspberry-pi-zero-w/) is used to read data from the Arduino, parse it, cache it when necessary, and write it into a [Graphite](https://graphiteapp.org/) server as timeseries data. It runs [the Python parser / cache / logger](weather_station.py).
 
 ## Sensor corrections - linear regression
 

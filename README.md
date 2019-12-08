@@ -36,15 +36,25 @@ All sensor readings within the same second are averaged by the parser. This redu
 
 ## Hardware
 
+### Arduino
+
 ![Arduino](/images/nano33.jpg)
 
 The [Arduino Nano 33 BLE Sense](https://store.arduino.cc/usa/nano-33-ble-sense) is used to read environmental parameters.
 
 Surprisingly, the Nano 33 is fast enough to do FFT on the noise signal in real time. This would have been difficult with older platforms.
 
+### Raspberry Pi
+
 ![RPi0](/images/rpi0.jpg)
 
 The [Raspberry Pi Zero W](https://www.raspberrypi.org/products/raspberry-pi-zero-w/) is used to read data from the Arduino, parse it, cache it when necessary, and write it into a [Graphite](https://graphiteapp.org/) server as timeseries data. It runs the Python parser / cache / logger.
+
+### The whole system
+
+The Arduino is plugged into one of the USB ports on the Pi Zero. This provides power to the Arduino, and also establishes the serial/USB connection between devices. Power to the whole system is provided via the second USB port on the Pi Zero.
+
+The Pi Zero is on the local WiFi network. That's how it connects to the Graphite server.
 
 ## Sensor corrections - linear regression
 

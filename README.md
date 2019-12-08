@@ -16,7 +16,7 @@ Send the metrics to a data store such as Graphite. Try hard to not lose data: re
 
 ### Arduino
 
-The Arduino dialect of C++. Simply read data and present it to serial output. Other than that, do as little as possible - move fast and save CPU cycles. To capture noise, the Fast Fourier Transform is unavoidable (and quite compute-heavy).
+The Arduino dialect of C++. Simply read data and present it to serial output. Other than that, do as little as possible - move fast and save CPU cycles. To capture noise, the Fast Fourier Transform is unavoidable (and quite compute-heavy). [This is the code](/nano33/nano33.ino).
 
 The main loop runs several times each second, gathering metrics from sensors each time.
 

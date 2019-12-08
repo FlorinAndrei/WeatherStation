@@ -28,7 +28,7 @@ Thread on Nordic Semi Devzone regarding the watchdog: https://devzone.nordicsemi
 
 ### Python
 
-Python for the parser / cache / logger. Multithreaded to reduce interruptions. Cache data in memory when storage is offline.
+Python for [the parser / cache / logger](weather_station.py). Multithreaded to reduce interruptions. Cache data in memory when storage is offline.
 
 All sensor readings within the same second are averaged by the parser. This reduces noise; the data store cannot deal with a time resolution better than 1 second anyway.
 
@@ -42,7 +42,7 @@ Surprisingly, the Nano 33 is fast enough to do FFT on the noise signal in real t
 
 ![RPi0](/images/rpi0.jpg)
 
-The [Raspberry Pi Zero W](https://www.raspberrypi.org/products/raspberry-pi-zero-w/) is used to read data from the Arduino, parse it, cache it when necessary, and write it into a [Graphite](https://graphiteapp.org/) server as timeseries data. It runs [the Python parser / cache / logger](weather_station.py).
+The [Raspberry Pi Zero W](https://www.raspberrypi.org/products/raspberry-pi-zero-w/) is used to read data from the Arduino, parse it, cache it when necessary, and write it into a [Graphite](https://graphiteapp.org/) server as timeseries data. It runs the Python parser / cache / logger.
 
 ## Sensor corrections - linear regression
 

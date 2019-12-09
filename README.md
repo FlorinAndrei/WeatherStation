@@ -64,6 +64,8 @@ This is the whole system, mounted on a wall in a 3D-printed bracket that also pr
 
 The temperature sensor on the Nano 33 seems quite inaccurate. At mid-range outdoors temperatures, measured in Celsius, its readings differ from reality by half a dozen degrees or so. The error appears to be linear.
 
+This is due to the sensor picking up heat from all the other components on the board. It depends on how hard the other components are working, on ventilation and other factors. There are ways to mitigate it to some extent. See more details [on this page](https://www.arduino.cc/en/Guide/NANO33BLESense).
+
 Fortunately, we have a public weather station nearby, whose readings we could use to calibrate the Arduino:
 - read the temperature on the Arduino
 - get the real temperature from the public weather station

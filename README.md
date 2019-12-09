@@ -56,6 +56,10 @@ The Arduino is plugged into one of the USB ports on the Pi Zero. This provides p
 
 The Pi Zero is on the local WiFi network. That's how it connects to the Graphite server.
 
+This is the whole system, mounted on a wall in a 3D-printed bracket that also protects it (to some extent) from rain:
+
+![system](/images/system.jpg)
+
 ## Sensor corrections - linear regression
 
 The temperature sensor on the Nano 33 seems quite inaccurate. At mid-range outdoors temperatures, measured in Celsius, its readings differ from reality by half a dozen degrees or so. The error appears to be linear.
